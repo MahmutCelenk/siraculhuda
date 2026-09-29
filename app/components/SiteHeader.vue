@@ -1,9 +1,7 @@
 ﻿<template>
   <header ref="headerElement" class="sticky top-0 z-50 border-b border-outline-variant/40 bg-surface/95 backdrop-blur" @keydown.esc="closeMenu(true)" @focusout="onHeaderFocusOut">
     <nav class="container-shell flex h-14 items-center justify-between" aria-label="Ana gezinme">
-      <NuxtLink to="/" class="font-display text-xl font-bold text-primary" @click="closeMenu()">
-        Al-Ilm
-      </NuxtLink>
+      <BrandLogo @click="closeMenu()" />
 
       <div class="desktop-navigation">
         <NuxtLink
@@ -118,6 +116,7 @@ onBeforeUnmount(() => {
 
 const navItems = [
   { label: 'Öğrenme Yolları', to: '/#start' },
+  { label: '32 Farz', to: '/temel-bilgiler' },
   { label: 'Sureler', to: '/sureler' },
   { label: "Kur'an", to: '/kuran' },
   { label: 'Hadis', to: '/hadis' },
@@ -126,9 +125,9 @@ const navItems = [
 </script>
 
 <style scoped>
-.desktop-navigation { display: flex; align-items: center; gap: 24px; }
+.desktop-navigation { display: flex; align-items: center; gap: 18px; }
 .mobile-menu-toggle, .mobile-navigation { display: none; }
-@media (max-width: 767.98px) {
+@media (max-width: 959.98px) {
   .desktop-navigation { display: none; }
   .mobile-menu-toggle { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 10px; border: 1px solid #dce5df; border-radius: 10px; background: #fff; color: #004532; cursor: pointer; }
   .mobile-menu-toggle svg { width: 22px; height: 22px; }

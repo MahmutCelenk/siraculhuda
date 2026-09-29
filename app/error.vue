@@ -6,7 +6,7 @@
       <header class="border-b border-outline-variant/40 bg-surface/80 backdrop-blur">
         <nav class="container-shell flex h-14 items-center justify-between">
           <button class="font-display text-xl font-bold text-primary" type="button" @click="goHome">
-            Al-Ilm
+            Sirâcü'l-Hüdâ
           </button>
 
           <button

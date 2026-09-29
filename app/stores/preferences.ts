@@ -15,15 +15,15 @@ export const usePreferencesStore = defineStore('preferences', {
   actions: {
     setFontScale(fontScale: FontScale) {
       this.fontScale = fontScale
-      localStorage.setItem('al-ilm:font-scale', fontScale)
+      localStorage.setItem('siraculhuda:font-scale', fontScale)
     },
     setShowArabic(showArabic: boolean) {
       this.showArabic = showArabic
-      localStorage.setItem('al-ilm:show-arabic', String(showArabic))
+      localStorage.setItem('siraculhuda:show-arabic', String(showArabic))
     },
     hydrate() {
-      const fontScale = localStorage.getItem('al-ilm:font-scale')
-      const showArabic = localStorage.getItem('al-ilm:show-arabic')
+      const fontScale = localStorage.getItem('siraculhuda:font-scale')
+      const showArabic = localStorage.getItem('siraculhuda:show-arabic')
 
       if (fontScale === 'normal' || fontScale === 'large') {
         this.fontScale = fontScale

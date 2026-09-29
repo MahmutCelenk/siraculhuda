@@ -1,284 +1,248 @@
 <template>
-  <main class="min-h-screen overflow-x-hidden bg-[#f8f9ff] font-sans text-[#121c2a]">
-    <header class="sticky top-0 z-[70] border-b border-[#bfc9c3]/65 bg-[#f8f9ff]/90 backdrop-blur-2xl">
-      <nav class="mx-auto grid min-h-16 w-[min(calc(100%_-_2rem),1200px)] grid-cols-[180px_1fr_120px] items-center gap-6 max-[980px]:grid-cols-[1fr_auto] max-sm:min-h-[60px] max-sm:w-[min(calc(100%_-_1.75rem),1200px)]" aria-label="32 Farz rehberi">
-        <NuxtLink to="/" class="inline-flex items-center gap-2.5 font-display text-[22px] font-bold text-[#003527] no-underline">
-          <span class="grid size-[34px] place-items-center rounded-full border border-[#003527]/15 bg-white text-lg">ع</span>
-          <span>Al-Ilm</span>
-        </NuxtLink>
+  <main class="overflow-x-hidden bg-background text-on-surface">
+    <section class="relative overflow-hidden border-b border-outline-variant/35 bg-[radial-gradient(circle_at_88%_16%,rgba(254,214,91,0.22),transparent_28%),radial-gradient(circle_at_8%_82%,rgba(166,242,209,0.24),transparent_30%),linear-gradient(180deg,#edf8f2_0%,#f9fbf9_100%)]">
+      <div class="container-shell flex min-h-[540px] items-center justify-center py-20 lg:py-24">
+        <div class="relative z-10 mx-auto max-w-4xl text-center">
+          <p class="inline-flex rounded-full border border-primary/15 bg-white/70 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-primary shadow-sm">Temel bilgiler · 6 bölüm</p>
+          <h1 class="mt-6 font-display text-5xl font-bold leading-[0.94] text-primary sm:text-6xl lg:text-7xl">32 Farz</h1>
+          <p class="mx-auto mt-6 max-w-2xl text-base leading-8 text-on-surface-variant sm:text-lg">
+            İman, İslam, namaz ve temizlikle ilgili temel farzları tek bir öğrenme akışında;
+            kısa açıklamalar ve uygulama görselleriyle kavra.
+          </p>
+          <div class="mt-8 flex flex-wrap justify-center gap-3">
+            <a href="#iman" class="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-bold text-on-primary shadow-manuscript-raised transition hover:-translate-y-0.5 hover:bg-primary-container">
+              Öğrenmeye başla <span aria-hidden="true">↓</span>
+            </a>
+            <a href="#teyemmum" class="inline-flex min-h-11 items-center justify-center rounded-full border border-primary/20 bg-white/75 px-6 text-sm font-bold text-primary transition hover:border-primary hover:bg-white">Teyemmümü gör</a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <div class="flex justify-center gap-8 max-[980px]:hidden">
-          <a
-            v-for="link in quickLinks"
-            :key="link.href"
-            :href="link.href"
-            :class="[
-              'border-b-2 px-0 pb-[18px] pt-[22px] text-sm font-semibold text-[#404944] no-underline transition-colors hover:border-[#735c00] hover:text-[#003527]',
-              activeSection === link.id ? 'border-[#735c00] text-[#003527]' : 'border-transparent'
-            ]"
-          >
+    <nav class="sticky top-14 z-40 border-b border-outline-variant/40 bg-surface/95 backdrop-blur-xl" aria-label="32 Farz bölüm gezinmesi">
+      <div class="container-shell overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div class="flex min-w-max items-center gap-2 py-2.5">
+          <a v-for="link in quickLinks" :key="link.href" :href="link.href" :aria-current="activeSection === link.id ? 'location' : undefined" :class="['rounded-full px-4 py-2 text-xs font-bold no-underline transition', activeSection === link.id ? 'bg-primary text-on-primary' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-primary']">
             {{ link.label }}
           </a>
         </div>
+      </div>
+    </nav>
 
-        <NuxtLink to="/" class="justify-self-end rounded-full border border-[#003527]/15 px-[15px] py-[9px] text-[13px] font-bold text-[#003527] no-underline max-sm:hidden">Ana sayfa</NuxtLink>
-      </nav>
-    </header>
-
-    <section class="relative grid min-h-[calc(100vh_-_64px)] place-items-center overflow-hidden border-b border-[#bfc9c3]/40 bg-[#f8f9ff] [background-image:radial-gradient(circle_at_2px_2px,rgba(0,53,39,0.045)_1px,transparent_0),radial-gradient(circle_at_12%_26%,rgba(6,78,59,0.08),transparent_24%),radial-gradient(circle_at_88%_78%,rgba(115,92,0,0.08),transparent_24%)] [background-size:32px_32px,auto,auto] max-sm:min-h-[640px]">
-      <div class="absolute bottom-[18%] left-[-120px] size-[360px] rounded-full bg-[#003527]/15 opacity-[0.35] blur-[48px]" aria-hidden="true" />
-      <div class="absolute right-[-120px] top-[18%] size-[360px] rounded-full bg-[#735c00]/15 opacity-[0.35] blur-[48px]" aria-hidden="true" />
-
-      <div class="relative z-[1] mx-auto w-[min(calc(100%_-_2rem),1200px)] py-24 text-center max-sm:w-[min(calc(100%_-_1.75rem),1200px)] max-sm:py-[72px]">
-        <p class="m-0 inline-flex rounded-full border border-[#003527]/15 bg-white/70 px-[18px] py-[9px] text-xs font-extrabold uppercase tracking-[0.14em] text-[#003527]">Temel Bilgiler</p>
-        <h1 class="m-0 mt-[26px] font-display text-[clamp(58px,8vw,116px)] font-bold leading-[0.92] text-[#003527] max-sm:text-[58px]">32 Farz</h1>
-        <p class="mx-auto mb-0 mt-7 max-w-[720px] text-xl leading-[1.7] text-[#404944] max-sm:text-[17px]">
-          İman, ibadet ve temizlikle ilgili temel farzları; anlamlarıyla birlikte sırayla
-          öğren.
-        </p>
-
-        <div class="mt-11 flex justify-center gap-4 max-sm:flex-col">
-          <a href="#islam" class="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-[10px] bg-[#003527] px-[26px] text-sm font-extrabold text-white no-underline shadow-[0_16px_34px_rgba(0,53,39,0.16)] transition duration-200 hover:-translate-y-0.5">
-            Farzları İncele
-            <span aria-hidden="true">↓</span>
-          </a>
+    <section id="iman" class="scroll-mt-32 py-20 md:py-28">
+      <div class="container-shell">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker text-xs font-extrabold uppercase tracking-[0.14em]">01 · İnanç</p>
+            <h2 class="section-title">İmanın Şartları</h2>
+            <p class="section-description">Bir Müslümanın inanması gereken altı temel esası ve her birinin ne anlama geldiğini öğren.</p>
+          </div>
+          <span class="section-count">6 farz</span>
+        </div>
+        <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <article v-for="(item, index) in faithConditions" :key="item.title" class="farz-card group">
+            <div class="flex items-center justify-between">
+              <span class="grid size-11 place-items-center rounded-xl bg-primary/[0.08] text-xl text-primary" aria-hidden="true">{{ item.icon }}</span>
+              <span class="text-xs font-black tracking-[0.18em] text-secondary">{{ pad(index + 1) }}</span>
+            </div>
+            <h3 class="mt-6 font-display text-2xl font-bold leading-tight text-on-surface">{{ item.title }}</h3>
+            <p class="mt-3 text-sm leading-7 text-on-surface-variant">{{ item.description }}</p>
+          </article>
         </div>
       </div>
     </section>
 
-    <section id="islam" class="border-y border-[#bfc9c3]/35 bg-[#eff4ff] py-28 max-sm:py-[72px]">
-      <div class="mx-auto w-[min(calc(100%_-_2rem),1200px)] max-sm:w-[min(calc(100%_-_1.75rem),1200px)]">
-        <div class="mb-12 flex items-end justify-between gap-8 max-sm:flex-col max-sm:items-start">
+    <section id="islam" class="scroll-mt-32 border-y border-outline-variant/30 bg-surface-container-low py-20 md:py-28">
+      <div class="container-shell">
+        <div class="section-heading">
           <div>
-            <p class="m-0 text-xs font-extrabold uppercase tracking-[0.14em] text-[#003527]">Temel ibadetler</p>
-            <h2 class="m-0 mt-2.5 font-display text-[clamp(34px,4vw,52px)] font-bold leading-[1.05] text-[#003527]">İslam'ın Şartları</h2>
-            <p class="mb-0 mt-4 max-w-[610px] text-base leading-[1.7] text-[#404944]">Müslüman olmanın ve dini yaşamanın beş temel şartını, anlamlarıyla birlikte kavra.</p>
+            <p class="section-kicker text-xs font-extrabold uppercase tracking-[0.14em]">02 · Teslimiyet</p>
+            <h2 class="section-title">İslam'ın Şartları</h2>
+            <p class="section-description">İnancı günlük hayata taşıyan beş temel ibadeti ve sorumluluğu tanı.</p>
           </div>
+          <span class="section-count">5 farz</span>
         </div>
-
-        <div class="grid grid-cols-5 gap-3 max-[980px]:grid-cols-3 max-sm:grid-cols-1" role="tablist" aria-label="İslam'ın şartları">
-          <button
-            v-for="(item, index) in islamConditions"
-            :key="item.id"
-            type="button"
-            role="tab"
-            :aria-selected="selectedIslamConditionId === item.id"
-            :class="[
-              'flex min-h-[94px] items-center gap-3 rounded-[14px] border bg-white/70 p-4 text-left text-[#003527] transition duration-200 hover:-translate-y-0.5 hover:border-[#003527] hover:bg-[#fffef9]',
-              selectedIslamConditionId === item.id ? '-translate-y-0.5 border-[#003527] bg-[#fffef9]' : 'border-[#003527]/15'
-            ]"
-            @click="selectedIslamConditionId = item.id"
-          >
-            <span class="grid size-[34px] shrink-0 place-items-center rounded-full bg-secondary-container text-xs font-black text-on-secondary-container">{{ pad(index + 1) }}</span>
-            <strong class="font-display text-lg leading-[1.1]">{{ item.title }}</strong>
+        <div class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-5" role="tablist" aria-label="İslam'ın şartları">
+          <button v-for="(item, index) in islamConditions" :key="item.id" type="button" role="tab" :aria-selected="selectedIslamConditionId === item.id" :class="['flex min-h-20 items-center gap-3 rounded-2xl border bg-white p-4 text-left text-primary transition hover:-translate-y-0.5 hover:border-primary', selectedIslamConditionId === item.id ? 'border-primary shadow-manuscript-raised' : 'border-outline-variant/40']" @click="selectedIslamConditionId = item.id">
+            <span class="grid size-8 shrink-0 place-items-center rounded-full bg-secondary-container text-[11px] font-black text-on-secondary-container">{{ pad(index + 1) }}</span>
+            <strong class="font-display text-base leading-tight">{{ item.title }}</strong>
           </button>
         </div>
-
-        <article class="mt-[18px] rounded-3xl border border-[#003527]/20 bg-[#fffef9] p-[34px] shadow-[0_16px_42px_rgba(0,53,39,0.06)] max-sm:p-6">
+        <article class="mt-4 rounded-3xl border border-primary/15 bg-white p-6 shadow-manuscript sm:p-9">
           <template v-if="selectedIslamConditionId === 'shahada'">
-            <div class="flex items-center gap-3">
-              <span class="grid size-[34px] shrink-0 place-items-center rounded-full bg-secondary-container text-xs font-black text-on-secondary-container">{{ pad(1) }}</span>
-              <p class="m-0 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#735c00]">İslam'a giriş ifadesi</p>
-            </div>
-            <h3 class="m-0 mt-[26px] font-display text-[clamp(34px,4vw,48px)] font-bold leading-[1.05] text-[#003527]">{{ shahada.title }}</h3>
-            <p class="mb-0 mt-[14px] max-w-[590px] text-[15px] leading-[1.65] text-[#404944]">{{ shahada.description }}</p>
-
-            <div class="mt-7 border-y border-[#003527]/10 py-5">
-              <p class="m-0 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#735c00]">Arapça metin</p>
-              <p class="mb-0 mt-[14px] text-right font-['Amiri_Quran',Amiri,serif] text-[clamp(28px,3vw,40px)] leading-[1.7] text-[#082c23]" lang="ar" dir="rtl">{{ shahada.arabic }}</p>
-            </div>
-
-            <div class="mt-[22px] grid gap-[18px]">
-              <div class="grid gap-[7px]">
-                <p class="m-0 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#735c00]">Okunuşu</p>
-                <strong class="text-sm font-medium leading-[1.65] text-[#24302a]">{{ shahada.latin }}</strong>
+            <div class="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+              <div>
+                <p class="text-[11px] font-extrabold uppercase tracking-[0.14em] text-secondary">İslam'a giriş ifadesi</p>
+                <h3 class="mt-3 font-display text-3xl font-bold text-primary sm:text-4xl">{{ shahada.title }}</h3>
+                <p class="mt-4 text-sm leading-7 text-on-surface-variant">{{ shahada.description }}</p>
+                <div class="mt-6 grid gap-4 text-sm leading-6">
+                  <p><strong class="text-primary">Okunuşu:</strong> {{ shahada.latin }}</p>
+                  <p><strong class="text-primary">Anlamı:</strong> {{ shahada.meaning }}</p>
+                </div>
               </div>
-              <div class="grid gap-[7px]">
-                <p class="m-0 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#735c00]">Türkçe anlamı</p>
-                <strong class="text-sm font-medium leading-[1.65] text-[#24302a]">{{ shahada.meaning }}</strong>
-              </div>
+              <p class="rounded-2xl bg-[#f1f7f3] p-6 text-right font-['Amiri_Quran',Amiri,serif] text-[clamp(28px,3vw,42px)] leading-[1.75] text-[#082c23]" lang="ar" dir="rtl">{{ shahada.arabic }}</p>
             </div>
           </template>
-
           <template v-else>
-            <div class="flex items-center gap-3">
-              <span class="grid size-[34px] shrink-0 place-items-center rounded-full bg-secondary-container text-xs font-black text-on-secondary-container">{{ pad(selectedIslamConditionIndex + 1) }}</span>
-              <p class="m-0 text-[11px] font-extrabold uppercase tracking-[0.12em] text-[#735c00]">İslam'ın şartlarından biri</p>
-            </div>
-            <h3 class="m-0 mt-[26px] font-display text-[clamp(34px,4vw,48px)] font-bold leading-[1.05] text-[#003527]">{{ selectedIslamCondition.title }}</h3>
-            <p class="mb-0 mt-[18px] max-w-[760px] text-[17px] leading-[1.75] text-[#404944]">{{ selectedIslamCondition.detail }}</p>
+            <p class="text-[11px] font-extrabold uppercase tracking-[0.14em] text-secondary">{{ pad(selectedIslamConditionIndex + 1) }} · İslam'ın şartlarından biri</p>
+            <h3 class="mt-3 font-display text-3xl font-bold text-primary sm:text-4xl">{{ selectedIslamCondition.title }}</h3>
+            <p class="mt-4 max-w-3xl text-base leading-8 text-on-surface-variant">{{ selectedIslamCondition.detail }}</p>
           </template>
         </article>
       </div>
     </section>
 
-    <section id="iman" class="py-28 max-sm:py-[72px]">
-      <div class="mx-auto w-[min(calc(100%_-_2rem),1200px)] max-sm:w-[min(calc(100%_-_1.75rem),1200px)]">
-        <div class="mb-12 flex items-end justify-between gap-8 max-sm:flex-col max-sm:items-start">
+    <section id="namaz" class="scroll-mt-32 py-20 md:py-28">
+      <div class="container-shell">
+        <div class="section-heading">
           <div>
-            <h2 class="m-0 font-display text-[clamp(34px,4vw,52px)] font-bold leading-[1.05] text-[#003527]">İmanın Şartları</h2>
-            <p class="mb-0 mt-4 max-w-[610px] text-base leading-[1.7] text-[#404944]">İmanın temelini oluşturan ve her müminin kalpten inanması gereken altı ana rükün.</p>
+            <p class="section-kicker text-xs font-extrabold uppercase tracking-[0.14em]">03 · İbadet</p>
+            <h2 class="section-title">Namazın Farzları</h2>
+            <p class="section-description">Namaza başlamadan önceki altı şartı ve namazın içindeki altı rüknü birlikte öğren.</p>
+          </div>
+          <span class="section-count">12 farz</span>
+        </div>
+        <div class="mt-10 grid gap-6 lg:grid-cols-2">
+          <article v-for="(group, groupIndex) in prayerGroups" :key="group.title" class="rounded-3xl border border-outline-variant/40 bg-white p-5 shadow-manuscript sm:p-8">
+            <div class="flex items-center gap-4 border-b border-outline-variant/30 pb-6">
+              <span :class="['grid size-11 shrink-0 place-items-center rounded-full font-black text-white', groupIndex === 0 ? 'bg-primary' : 'bg-secondary']">{{ groupIndex + 1 }}</span>
+              <div>
+                <h3 class="font-display text-2xl font-bold">{{ group.title }}</h3>
+                <p class="mt-1 text-sm text-on-surface-variant">{{ group.description }}</p>
+              </div>
+            </div>
+            <ol class="mt-5 grid list-none gap-3 p-0">
+              <li v-for="(item, index) in group.items" :key="item.title" class="flex items-start gap-3 rounded-2xl bg-surface-container-low p-4">
+                <span class="grid size-8 shrink-0 place-items-center rounded-lg bg-white text-[11px] font-black text-primary shadow-sm">{{ pad(index + 1) }}</span>
+                <div><strong class="text-sm text-on-surface">{{ item.title }}</strong><p class="mt-1 text-xs leading-5 text-on-surface-variant">{{ item.description }}</p></div>
+              </li>
+            </ol>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="abdest" class="scroll-mt-32 border-y border-outline-variant/30 bg-surface-container-low py-20 md:py-28">
+      <div class="container-shell">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker text-xs font-extrabold uppercase tracking-[0.14em]">04 · Su ile temizlik</p>
+            <h2 class="section-title">Abdestin Farzları</h2>
+            <p class="section-description">Namaz için gerekli temizliği tamamlayan dört temel uygulamayı doğru sırasıyla gör.</p>
+          </div>
+          <span class="section-count">4 farz</span>
+        </div>
+        <div class="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+          <article v-for="(item, index) in ablutionFards" :key="item.title" class="group overflow-hidden rounded-3xl border border-outline-variant/40 bg-white shadow-manuscript transition hover:-translate-y-1 hover:shadow-manuscript-raised">
+            <div class="relative aspect-[4/3] overflow-hidden bg-primary/5">
+              <img class="size-full object-cover transition duration-500 group-hover:scale-[1.03]" :src="item.image" :alt="item.alt" loading="lazy">
+              <span class="absolute left-4 top-4 grid size-10 place-items-center rounded-full bg-primary text-sm font-black text-white shadow-lg">{{ index + 1 }}</span>
+            </div>
+            <div class="p-6"><h3 class="font-display text-xl font-bold text-primary">{{ item.title }}</h3><p class="mt-3 text-sm leading-6 text-on-surface-variant">{{ item.description }}</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="gusul" class="scroll-mt-32 py-20 md:py-28">
+      <div class="container-shell">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker text-xs font-extrabold uppercase tracking-[0.14em]">05 · Beden temizliği</p>
+            <h2 class="section-title">Guslün Farzları</h2>
+            <p class="section-description">Guslün geçerli olması için ağız, burun ve bütün bedenle ilgili üç zorunlu adımı öğren.</p>
+          </div>
+          <span class="section-count">3 farz</span>
+        </div>
+        <div class="mt-10 grid gap-5 md:grid-cols-3">
+          <article v-for="(item, index) in ghuslFards" :key="item.title" class="farz-card relative overflow-hidden">
+            <span class="absolute -right-3 -top-7 font-display text-[110px] font-bold leading-none text-primary/[0.045]" aria-hidden="true">{{ index + 1 }}</span>
+            <span class="grid size-11 place-items-center rounded-xl bg-primary text-sm font-black text-white">{{ pad(index + 1) }}</span>
+            <h3 class="mt-6 font-display text-2xl font-bold text-primary">{{ item.title }}</h3>
+            <p class="mt-3 text-sm leading-7 text-on-surface-variant">{{ item.description }}</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="teyemmum" class="scroll-mt-32 border-y border-outline-variant/30 bg-[radial-gradient(circle_at_90%_8%,rgba(254,214,91,0.16),transparent_28%),linear-gradient(180deg,#f5f5f1_0%,#fafaf8_100%)] py-20 md:py-28">
+      <div class="container-shell">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker text-xs font-extrabold uppercase tracking-[0.14em]">06 · Su kullanılamadığında</p>
+            <h2 class="section-title">Teyemmümün Farzları</h2>
+            <p class="section-description">Su bulunmadığında veya kullanılamadığında yapılan teyemmümün iki farzını ve uygulama sırasını öğren.</p>
+          </div>
+          <span class="section-count">2 farz</span>
+        </div>
+        <div class="mt-10 grid gap-5 lg:grid-cols-[0.75fr_1.25fr]">
+          <div class="rounded-3xl bg-primary p-6 text-white shadow-manuscript-raised sm:p-8">
+            <p class="text-[11px] font-extrabold uppercase tracking-[0.14em] text-primary-fixed">32 farz sayımındaki yeri</p>
+            <ol class="mt-6 grid list-none gap-4 p-0">
+              <li v-for="(item, index) in tayammumFards" :key="item.title" class="flex gap-4 rounded-2xl bg-white/[0.08] p-4">
+                <span class="grid size-9 shrink-0 place-items-center rounded-full bg-secondary-container text-xs font-black text-on-secondary-container">{{ index + 1 }}</span>
+                <div><strong class="text-base">{{ item.title }}</strong><p class="mt-1.5 text-sm leading-6 text-white/75">{{ item.description }}</p></div>
+              </li>
+            </ol>
+            <div class="mt-6 rounded-2xl border border-white/15 bg-white/5 p-4 text-xs leading-6 text-white/75">
+              <strong class="text-white">Neden aşağıda 3 kart var?</strong>
+              <p class="mt-1">İkinci farzın içindeki iki darb ve iki mesh hareketini uygulamada daha anlaşılır göstermek için süreç üç görsel adıma ayrıldı.</p>
+            </div>
+          </div>
+          <div class="rounded-3xl border border-secondary/15 bg-white p-6 shadow-manuscript sm:p-8">
+            <p class="text-[11px] font-extrabold uppercase tracking-[0.14em] text-secondary">Kısa kavramlar</p>
+            <dl class="mt-5 grid gap-3">
+              <div class="rounded-2xl bg-surface-container-low p-4"><dt class="font-display text-xl font-bold text-primary">Darb</dt><dd class="mt-2 text-sm leading-6 text-on-surface-variant">Açık elleri temiz toprak veya toprak cinsinden bir yüzeye dokundurup kaldırmaktır.</dd></div>
+              <div class="rounded-2xl bg-surface-container-low p-4"><dt class="font-display text-xl font-bold text-primary">Mesh</dt><dd class="mt-2 text-sm leading-6 text-on-surface-variant">Toprağa dokundurulan elleri yüzün ve kolların üzerine sürmektir.</dd></div>
+            </dl>
+            <div class="mt-5 grid gap-3">
+              <div class="rounded-2xl border border-primary/10 p-4">
+                <strong class="text-sm text-primary">Ne zaman yapılır?</strong>
+                <p class="mt-1.5 text-sm leading-6 text-on-surface-variant">Abdest veya gusül için su bulunmadığında ya da suyu kullanmak sağlık açısından mümkün olmadığında yapılır.</p>
+              </div>
+              <div class="rounded-2xl border border-primary/10 p-4">
+                <strong class="text-sm text-primary">Hangi yüzey uygundur?</strong>
+                <p class="mt-1.5 text-sm leading-6 text-on-surface-variant">Temiz toprak, kum, taş ve toprak cinsinden doğal yüzeyler kullanılabilir.</p>
+              </div>
+            </div>
           </div>
         </div>
-
-        <div class="grid grid-cols-3 gap-7 max-[980px]:grid-cols-2 max-sm:grid-cols-1">
-          <article v-for="(item, index) in faithConditions" :key="item.title" class="min-h-[268px] rounded-[18px] border border-[#d7ded9] bg-white p-8 [background-image:radial-gradient(circle_at_88%_14%,rgba(0,53,39,0.06),transparent_32%)] transition duration-200 hover:-translate-y-1 hover:border-[#003527]/30 hover:shadow-[0_18px_44px_rgba(6,78,59,0.09)]">
-            <div class="grid size-[50px] place-items-center rounded-[14px] bg-[#003527]/[0.08] text-xl text-[#003527]" aria-hidden="true">{{ item.icon }}</div>
-            <span class="mt-6 block text-xs font-black tracking-[0.18em] text-[#735c00]">{{ pad(index + 1) }}</span>
-            <h3 class="m-0 mt-3 font-display text-[25px] leading-[1.18] text-[#121c2a]">{{ item.title }}</h3>
-            <p class="mb-0 mt-[14px] text-sm leading-[1.65] text-[#404944]">{{ item.description }}</p>
+        <div class="mt-8 grid gap-5 lg:grid-cols-3">
+          <article v-for="(step, index) in tayammumSteps" :key="step.title" class="group overflow-hidden rounded-3xl border border-outline-variant/40 bg-white shadow-manuscript transition hover:-translate-y-1 hover:shadow-manuscript-raised">
+            <div class="relative aspect-[4/3] overflow-hidden bg-secondary/5">
+              <img class="size-full object-cover transition duration-500 group-hover:scale-[1.03]" :src="step.image" :alt="step.alt" loading="lazy">
+              <span class="absolute left-4 top-4 rounded-full bg-[#735c00] px-3 py-2 text-[11px] font-extrabold uppercase tracking-[0.08em] text-white shadow-lg">{{ step.label }}</span>
+            </div>
+            <div class="p-6"><p class="text-[11px] font-extrabold uppercase tracking-[0.12em] text-secondary">Adım {{ index + 1 }}</p><h3 class="mt-2 font-display text-2xl font-bold text-primary">{{ step.title }}</h3><p class="mt-3 text-sm leading-7 text-on-surface-variant">{{ step.description }}</p></div>
           </article>
         </div>
-      </div>
-    </section>
-
-    <section id="namaz" class="py-28 max-sm:py-[72px]">
-      <div class="mx-auto w-[min(calc(100%_-_2rem),1200px)] max-sm:w-[min(calc(100%_-_1.75rem),1200px)]">
-        <div class="mx-auto mb-[54px] max-w-[760px] text-center">
-          <p class="m-0 text-xs font-extrabold uppercase tracking-[0.14em] text-[#003527]">Namaz rehberi</p>
-          <h2 class="m-0 mt-2.5 font-display text-[clamp(34px,4vw,52px)] font-bold leading-[1.05] text-[#003527]">Namazın Farzları</h2>
-          <p class="mx-auto mb-0 mt-4 max-w-[610px] text-base leading-[1.7] text-[#404944]">Namaza başlamadan önce ve namaz içinde dikkat edilen on iki farz.</p>
-        </div>
-
-        <div class="grid grid-cols-2 gap-8 max-[980px]:grid-cols-2 max-sm:grid-cols-1">
-          <article class="rounded-3xl border border-[#d7ded9] bg-white p-[34px] transition duration-200 hover:-translate-y-1 hover:border-[#003527]/30 hover:shadow-[0_18px_44px_rgba(6,78,59,0.09)]">
-            <div class="mb-7 flex items-center gap-[18px]">
-              <span class="grid size-[46px] shrink-0 place-items-center rounded-full bg-[#003527] font-black text-white">1</span>
-              <div>
-                <h3 class="m-0 font-display text-[27px] leading-[1.15]">Dışındaki Farzlar</h3>
-                <p class="mb-0 mt-1.5 text-sm text-[#404944]">Namaza başlamadan önce yerine getirilen şartlar.</p>
-              </div>
-            </div>
-            <ol class="m-0 grid list-none gap-3 p-0">
-              <li v-for="(item, index) in prayerOuterFards" :key="item.title" class="flex items-start gap-[14px] rounded-xl border border-[#bfc9c3]/65 bg-[#f8f9ff] px-4 py-[14px] font-bold text-[#121c2a]">
-                <span class="grid size-[34px] shrink-0 place-items-center rounded-[10px] bg-[#003527]/[0.08] text-xs font-black text-[#003527]">{{ pad(index + 1) }}</span>
-                <div>
-                  <strong class="block text-[15px] text-[#121c2a]">{{ item.title }}</strong>
-                  <p class="mb-0 mt-1.5 text-[13px] font-normal leading-[1.55] text-[#404944]">{{ item.description }}</p>
-                </div>
-              </li>
-            </ol>
-          </article>
-
-          <article class="rounded-3xl border border-[#d7ded9] bg-white p-[34px] transition duration-200 hover:-translate-y-1 hover:border-[#003527]/30 hover:shadow-[0_18px_44px_rgba(6,78,59,0.09)]">
-            <div class="mb-7 flex items-center gap-[18px]">
-              <span class="grid size-[46px] shrink-0 place-items-center rounded-full bg-[#735c00] font-black text-white">2</span>
-              <div>
-                <h3 class="m-0 font-display text-[27px] leading-[1.15]">İçindeki Farzlar</h3>
-                <p class="mb-0 mt-1.5 text-sm text-[#404944]">Namaz esnasında yapılan rükünler.</p>
-              </div>
-            </div>
-            <ol class="m-0 grid list-none gap-3 p-0">
-              <li v-for="(item, index) in prayerInnerFards" :key="item.title" class="flex items-start gap-[14px] rounded-xl border border-[#bfc9c3]/65 bg-[#f8f9ff] px-4 py-[14px] font-bold text-[#121c2a]">
-                <span class="grid size-[34px] shrink-0 place-items-center rounded-[10px] bg-[#735c00]/10 text-xs font-black text-[#735c00]">{{ pad(index + 1) }}</span>
-                <div>
-                  <strong class="block text-[15px] text-[#121c2a]">{{ item.title }}</strong>
-                  <p class="mb-0 mt-1.5 text-[13px] font-normal leading-[1.55] text-[#404944]">{{ item.description }}</p>
-                </div>
-              </li>
-            </ol>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="abdest" class="bg-white py-28 max-sm:py-[72px]">
-      <div class="mx-auto w-[min(calc(100%_-_2rem),1200px)] max-sm:w-[min(calc(100%_-_1.75rem),1200px)]">
-        <div class="mx-auto mb-[54px] max-w-[760px] text-center">
-          <p class="m-0 text-xs font-extrabold uppercase tracking-[0.14em] text-[#003527]">Arınma</p>
-          <h2 class="m-0 mt-2.5 font-display text-[clamp(34px,4vw,52px)] font-bold leading-[1.05] text-[#003527]">Abdestin Farzları</h2>
-          <p class="mx-auto mb-0 mt-4 max-w-[610px] text-base leading-[1.7] text-[#404944]">Namaza hazırlığın anahtarı olan dört temel adım.</p>
-        </div>
-
-        <div class="grid grid-cols-4 gap-6 max-[980px]:grid-cols-2 max-sm:grid-cols-1">
-          <article v-for="(item, index) in ablutionFards" :key="item.title" class="group overflow-hidden rounded-[22px] border border-[#d7ded9] bg-white transition duration-200 hover:-translate-y-1 hover:border-[#003527]/30 hover:shadow-[0_18px_44px_rgba(6,78,59,0.09)]">
-            <div class="h-[178px] overflow-hidden bg-[#003527]/[0.08]">
-              <img class="size-full object-cover transition-transform duration-300 group-hover:scale-105" :src="item.image" :alt="item.alt">
-            </div>
-            <div class="p-6">
-              <span class="grid size-9 place-items-center rounded-full bg-[#003527] text-[13px] font-black text-white">{{ index + 1 }}</span>
-              <h3 class="m-0 mt-[18px] font-display text-[22px]">{{ item.title }}</h3>
-              <p class="mb-0 mt-2.5 text-sm leading-[1.6] text-[#404944]">{{ item.description }}</p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="gusul" class="py-28 max-sm:py-[72px]">
-      <div class="mx-auto grid w-[min(calc(100%_-_2rem),1200px)] grid-cols-2 gap-8 max-[980px]:grid-cols-2 max-sm:w-[min(calc(100%_-_1.75rem),1200px)] max-sm:grid-cols-1">
-        <article class="min-h-[430px] rounded-3xl border border-[#d7ded9] bg-white p-[34px] [background-image:radial-gradient(circle_at_86%_10%,rgba(0,53,39,0.06),transparent_30%)] transition duration-200 hover:-translate-y-1 hover:border-[#003527]/30 hover:shadow-[0_18px_44px_rgba(6,78,59,0.09)]">
-          <p class="m-0 text-xs font-extrabold uppercase tracking-[0.14em] text-[#003527]">Büyük temizlik</p>
-          <h2 class="m-0 mt-2.5 font-display text-[clamp(34px,4vw,52px)] font-bold leading-[1.05] text-[#003527]">Guslün Farzları</h2>
-          <p class="mb-0 mt-4 max-w-[610px] text-base leading-[1.7] text-[#404944]">Bütün vücudun temizlenmesi ve manevi arınma için üç temel şart.</p>
-          <ul class="m-0 mt-[30px] grid list-none gap-4 p-0">
-            <li v-for="item in ghuslFards" :key="item.title" class="flex gap-[14px] rounded-2xl border border-[#003527]/10 bg-[#003527]/[0.035] p-[18px]">
-              <span class="grid size-[30px] shrink-0 place-items-center rounded-full bg-[#003527] font-black text-white" aria-hidden="true">✓</span>
-              <div>
-                <strong class="text-base text-[#003527]">{{ item.title }}</strong>
-                <p class="mb-0 mt-1.5 text-sm leading-[1.55] text-[#404944]">{{ item.description }}</p>
-              </div>
-            </li>
-          </ul>
-        </article>
-
-        <article id="teyemmum" class="min-h-[430px] rounded-3xl border border-[#d7ded9] bg-white p-[34px] [background-image:radial-gradient(circle_at_86%_10%,rgba(115,92,0,0.08),transparent_30%)] transition duration-200 hover:-translate-y-1 hover:border-[#003527]/30 hover:shadow-[0_18px_44px_rgba(6,78,59,0.09)]">
-          <p class="m-0 text-xs font-extrabold uppercase tracking-[0.14em] text-[#003527]">Su bulunmadığında</p>
-          <h2 class="m-0 mt-2.5 font-display text-[clamp(34px,4vw,52px)] font-bold leading-[1.05] text-[#003527]">Teyemmümün Farzları</h2>
-          <p class="mb-0 mt-4 max-w-[610px] text-base leading-[1.7] text-[#404944]">Teyemmümün geçerli olmasını sağlayan temel farzlar.</p>
-          <ul class="m-0 mt-[30px] grid list-none gap-4 p-0">
-            <li v-for="item in tayammumFards" :key="item.title" class="flex gap-[14px] rounded-2xl border border-[#735c00]/15 bg-[#735c00]/[0.045] p-[18px]">
-              <span class="grid size-[30px] shrink-0 place-items-center rounded-full bg-[#735c00] font-black text-white" aria-hidden="true">✓</span>
-              <div>
-                <strong class="text-base text-[#003527]">{{ item.title }}</strong>
-                <p class="mb-0 mt-1.5 text-sm leading-[1.55] text-[#404944]">{{ item.description }}</p>
-              </div>
-            </li>
-          </ul>
-        </article>
       </div>
     </section>
   </main>
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  layout: false,
-  path: '/temel-bilgiler'
-})
+definePageMeta({ path: '/temel-bilgiler' })
 
-type FaithItem = {
-  title: string
-  description: string
-  icon: string
-}
+type FaithItem = { title: string; description: string; icon: string }
+type TextItem = { title: string; description: string }
+type IslamCondition = TextItem & { id: string; detail: string }
+type IllustratedItem = TextItem & { image: string; alt: string }
+type TayammumStep = IllustratedItem & { label: string }
 
-type TextItem = {
-  title: string
-  description: string
-}
-
-type IslamCondition = TextItem & {
-  id: string
-  detail: string
-}
-
-type AblutionItem = TextItem & {
-  image: string
-  alt: string
-}
-
-const activeSection = ref('islam')
+const activeSection = ref('iman')
 const selectedIslamConditionId = ref('shahada')
 
-const quickLinks = [
-  { id: 'islam', label: 'İslam', href: '#islam' },
-  { id: 'iman', label: 'İman', href: '#iman' },
-  { id: 'namaz', label: 'Namaz', href: '#namaz' },
-  { id: 'abdest', label: 'Abdest', href: '#abdest' },
-  { id: 'gusul', label: 'Gusül', href: '#gusul' },
-  { id: 'teyemmum', label: 'Teyemmüm', href: '#teyemmum' }
+const farzSummary = [
+  { count: 6, label: 'İman', href: '#iman' },
+  { count: 5, label: 'İslam', href: '#islam' },
+  { count: 12, label: 'Namaz', href: '#namaz' },
+  { count: 4, label: 'Abdest', href: '#abdest' },
+  { count: 3, label: 'Gusül', href: '#gusul' },
+  { count: 2, label: 'Teyemmüm', href: '#teyemmum' }
 ]
+
+const quickLinks = farzSummary.map(item => ({ id: item.href.slice(1), label: `${item.label} · ${item.count}`, href: item.href }))
 
 const faithConditions: FaithItem[] = [
   { title: "Allah'a İman", description: "Her şeyi yaratan, eşi ve benzeri olmayan tek ilahın varlığına ve birliğine inanmaktır.", icon: '✦' },
@@ -300,18 +264,13 @@ const shahada = {
 const islamConditions: IslamCondition[] = [
   { id: 'shahada', title: 'Kelime-i Şehadet', description: 'Allah’ın birliğine ve Peygamberimizin elçiliğine şahitlik etmektir.', detail: shahada.description },
   { id: 'prayer', title: 'Namaz', description: 'Belirli vakitlerde Allah’a yönelerek namaz kılmaktır.', detail: 'Namaz, Müslümanın gün içinde belirli vakitlerde Allah’a yönelerek yerine getirdiği ibadettir. Hazırlık, kıyam, rükû, secde ve selamdan oluşan ana akışla öğrenilebilir.' },
-  { id: 'alms', title: 'Zekat', description: 'İhtiyaç sahiplerine belirlenen ölçüde vermektir.', detail: 'Zekat, mali imkanı olan Müslümanların belirli şartlarla ihtiyaç sahiplerine verdiği ibadettir. Paylaşmayı, sosyal dayanışmayı ve malın bereketini hatırlatır.' },
+  { id: 'alms', title: 'Zekât', description: 'İhtiyaç sahiplerine belirlenen ölçüde vermektir.', detail: 'Zekât, mali imkânı olan Müslümanların belirli şartlarla ihtiyaç sahiplerine verdiği ibadettir. Paylaşmayı, sosyal dayanışmayı ve malın bereketini hatırlatır.' },
   { id: 'fasting', title: 'Oruç', description: 'Ramazan ayında imsak ile iftar arasında oruç tutmaktır.', detail: 'Oruç, Ramazan ayında imsak vaktinden iftara kadar yeme, içme ve orucu bozan davranışlardan uzak durmaktır. Sabır ve bilinçle geçirilen bir ibadet vaktidir.' },
-  { id: 'pilgrimage', title: 'Hac', description: "Gücü yetenlerin Kabe'yi ziyaret etmesidir.", detail: "Hac, maddi ve bedeni imkanı olan Müslümanların belirli zamanda Kabe'yi ziyaret ederek yerine getirdiği ibadettir. Ömründe bir kez farzdır." }
+  { id: 'pilgrimage', title: 'Hac', description: "Gücü yetenlerin Kâbe'yi ziyaret etmesidir.", detail: "Hac, maddi ve bedeni imkânı olan Müslümanların belirli zamanda Kâbe'yi ziyaret ederek yerine getirdiği ibadettir. Ömründe bir kez farzdır." }
 ]
 
-const selectedIslamCondition = computed(() =>
-  islamConditions.find(item => item.id === selectedIslamConditionId.value) ?? islamConditions[0]!
-)
-
-const selectedIslamConditionIndex = computed(() =>
-  islamConditions.findIndex(item => item.id === selectedIslamConditionId.value)
-)
+const selectedIslamCondition = computed(() => islamConditions.find(item => item.id === selectedIslamConditionId.value) ?? islamConditions[0]!)
+const selectedIslamConditionIndex = computed(() => islamConditions.findIndex(item => item.id === selectedIslamConditionId.value))
 
 const prayerOuterFards: TextItem[] = [
   { title: 'Hadesten Taharet', description: 'Namazdan önce abdestli olmak; gerektiğinde gusül veya teyemmüm ile temizlenmektir.' },
@@ -323,64 +282,49 @@ const prayerOuterFards: TextItem[] = [
 ]
 
 const prayerInnerFards: TextItem[] = [
-  { title: 'İftitah Tekbiri', description: 'Eller kaldırılarak “Allahu Ekber” denir ve namaza başlanır.' },
+  { title: 'İftitah Tekbiri', description: '“Allahu Ekber” denilerek namaza başlanır.' },
   { title: 'Kıyam', description: 'Gücü yeten kişinin farz namazda ayakta durmasıdır.' },
-  { title: 'Kıraat', description: 'Kıyamdayken Kur’an’dan Fâtiha ve ardından bir sure veya ayet okumaktır.' },
-  { title: 'Rükû', description: 'Eller dizlere konularak eğilmek ve rükû tesbihini okumaktır.' },
-  { title: 'Sücud', description: 'Alın ve burnu yere koyarak secdeye varmak; secde tesbihini okumaktır.' },
-  { title: "Ka'de-i Ahire", description: 'Namazın son rekâtında oturup ettehiyyatü okuyacak kadar beklemektir.' }
+  { title: 'Kıraat', description: 'Kıyamdayken Kur’an’dan gerekli miktarda okumaktır.' },
+  { title: 'Rükû', description: 'Eğilip elleri dizlere koyarak rükû hâlini yerine getirmektir.' },
+  { title: 'Sücud', description: 'Alın ve burnu yere koyarak secdeye varmaktır.' },
+  { title: "Ka'de-i Ahîre", description: 'Namazın sonunda Tahiyyat okuyacak kadar oturmaktır.' }
 ]
 
-const ablutionFards: AblutionItem[] = [
-  {
-    title: 'Yüzü Yıkamak',
-    description: 'Alın saç bitiminden çene altına, kulak yumuşaklarına kadar yüzü yıkamak.',
-    image: '/images/articles/wudu-wash-face.png',
-    alt: 'Abdest alırken yüzü yıkamak'
-  },
-  {
-    title: 'Kolları Yıkamak',
-    description: 'Ellerle beraber dirsekleri de dahil ederek kolları yıkamak.',
-    image: '/images/articles/wudu-wash-arms.png',
-    alt: 'Abdest alırken kolları dirseklerle birlikte yıkamak'
-  },
-  {
-    title: 'Başa Mesh Etmek',
-    description: 'Başın en az bir kısmını ıslak el ile mesh etmek.',
-    image: '/images/articles/wudu-wipe-head.png',
-    alt: 'Abdest alırken başa mesh etmek'
-  },
-  {
-    title: 'Ayakları Yıkamak',
-    description: 'Topuklarla birlikte ayakları yıkamak.',
-    image: '/images/articles/wudu-wash-feet.png',
-    alt: 'Abdest alırken ayakları topuklarla birlikte yıkamak'
-  }
+const prayerGroups = [
+  { title: 'Namazın Dışındaki Farzlar', description: 'Namaza başlamadan önce yerine getirilen şartlar.', items: prayerOuterFards },
+  { title: 'Namazın İçindeki Farzlar', description: 'Namaz esnasında yerine getirilen rükünler.', items: prayerInnerFards }
+]
+
+const ablutionFards: IllustratedItem[] = [
+  { title: 'Yüzü Yıkamak', description: 'Alın saç bitiminden çene altına, kulak yumuşaklarına kadar yüzü yıkamak.', image: '/images/articles/wudu-wash-face.png', alt: 'Abdest alırken yüzü yıkamak' },
+  { title: 'Kolları Yıkamak', description: 'Ellerle beraber dirsekleri de dâhil ederek kolları yıkamak.', image: '/images/articles/wudu-wash-arms.png', alt: 'Abdest alırken kolları dirseklerle birlikte yıkamak' },
+  { title: 'Başa Mesh Etmek', description: 'Başın en az dörtte birini ıslak el ile mesh etmek.', image: '/images/articles/wudu-wipe-head.png', alt: 'Abdest alırken başa mesh etmek' },
+  { title: 'Ayakları Yıkamak', description: 'Topuklarla birlikte ayakları yıkamak.', image: '/images/articles/wudu-wash-feet.png', alt: 'Abdest alırken ayakları topuklarla birlikte yıkamak' }
 ]
 
 const ghuslFards: TextItem[] = [
-  { title: 'Ağza su vermek', description: 'Ağza su alıp iyice çalkalamak.' },
-  { title: 'Burna su vermek', description: 'Burna su çekip temizlemek.' },
-  { title: 'Bütün vücudu yıkamak', description: 'Kuru yer kalmayacak şekilde bütün bedeni yıkamak.' }
+  { title: 'Ağzı yıkamak', description: 'Ağza su alıp ağız içinin tamamını iyice çalkalamak.' },
+  { title: 'Burnu yıkamak', description: 'Burna su çekip burnun içini temizlemek.' },
+  { title: 'Bütün bedeni yıkamak', description: 'Kuru yer kalmayacak şekilde bütün bedeni yıkamak.' }
 ]
 
 const tayammumFards: TextItem[] = [
-  { title: 'Niyet', description: 'Hangi ibadet için teyemmüm edileceğine niyet etmek.' },
-  { title: 'Yüzü mesh etmek', description: 'Elleri toprağa vurup yüzü mesh etmek.' },
-  { title: 'Kolları mesh etmek', description: 'Elleri toprağa vurup kolları dirseklerle beraber mesh etmek.' }
+  { title: 'Niyet etmek', description: 'Abdest veya gusül yerine teyemmüm yapılacağına kalben niyet etmek.' },
+  { title: 'Yüzü ve kolları mesh etmek', description: 'Elleri temiz toprağa iki defa dokundurup birinci darb ile yüzü, ikinci darb ile kolları dirseklerle birlikte mesh etmek.' }
+]
+
+const tayammumSteps: TayammumStep[] = [
+  { label: 'Niyet + 1. darb', title: 'Temiz zemine dokun', description: 'Niyet ettikten sonra parmakları açık biçimde iki eli temiz toprak veya toprak cinsinden bir yüzeye dokundur.', image: '/images/fundamentals/tayammum-darb.png', alt: 'Teyemmüm için iki elin temiz toprak yüzeyine dokundurulması' },
+  { label: 'Yüz mesh', title: 'Yüzün tamamını mesh et', description: 'Eller fazla tozlandıysa hafifçe silkele; ardından iki elin içiyle yüzün tamamını bir defa mesh et.', image: '/images/fundamentals/tayammum-face.png', alt: 'Teyemmümde iki elle yüzün mesh edilmesi' },
+  { label: '2. darb + kol mesh', title: 'Kolları dirseklere kadar mesh et', description: 'Elleri ikinci kez temiz zemine dokundur; karşı elin içiyle sağ ve sol kolu dirseklerle birlikte mesh et.', image: '/images/fundamentals/tayammum-arms.png', alt: 'Teyemmümde kolun dirsekle birlikte mesh edilmesi' }
 ]
 
 const pad = (value: number) => String(value).padStart(2, '0')
 
 const updateScrollState = () => {
-  const sections = quickLinks
-    .map(link => document.getElementById(link.id))
-    .filter((section): section is HTMLElement => Boolean(section))
-
-  const current = sections.findLast(section => section.getBoundingClientRect().top <= 120)
-  if (current) {
-    activeSection.value = current.id
-  }
+  const sections = quickLinks.map(link => document.getElementById(link.id)).filter((section): section is HTMLElement => Boolean(section))
+  const current = sections.findLast(section => section.getBoundingClientRect().top <= 150)
+  if (current) activeSection.value = current.id
 }
 
 onMounted(() => {
@@ -388,12 +332,20 @@ onMounted(() => {
   window.addEventListener('scroll', updateScrollState, { passive: true })
 })
 
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', updateScrollState)
-})
+onBeforeUnmount(() => window.removeEventListener('scroll', updateScrollState))
 
 useSeoMeta({
   title: '32 Farz Rehberi',
-  description: "İmanın şartları, İslam'ın şartları, namaz, abdest, gusül ve teyemmüm farzlarını sade bir rehberle öğren."
+  description: "İmanın şartları, İslam'ın şartları, namaz, abdest, gusül ve teyemmüm farzlarını görsel ve bütünlüklü bir rehberle öğren."
 })
 </script>
+
+<style scoped>
+.section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; }
+.section-title { margin-top: .65rem; font-family: 'Playfair Display', serif; font-size: clamp(2.15rem, 4vw, 3.25rem); font-weight: 700; line-height: 1.05; color: #004532; }
+.section-description { max-width: 42rem; margin-top: 1rem; color: #3f4944; font-size: 1rem; line-height: 1.75; }
+.section-count { flex: 0 0 auto; border: 1px solid rgb(0 69 50 / .14); border-radius: 999px; background: #fff; padding: .6rem 1rem; color: #004532; font-size: .75rem; font-weight: 800; }
+.farz-card { min-height: 15rem; border: 1px solid rgb(190 201 194 / .5); border-radius: 1.5rem; background: #fff; padding: 1.75rem; box-shadow: 0 4px 20px rgb(6 95 70 / .04); transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+.farz-card:hover { transform: translateY(-4px); border-color: rgb(139 214 182 / .85); box-shadow: 0 12px 32px rgb(6 95 70 / .08); }
+@media (max-width: 639.98px) { .section-heading { align-items: flex-start; flex-direction: column; gap: 1.25rem; } .farz-card { min-height: auto; } }
+</style>

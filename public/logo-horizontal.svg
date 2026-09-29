@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 96" role="img" aria-label="Sirâcü'l-Hüdâ">
+  <rect x="8" y="8" width="80" height="80" rx="22" fill="#004532"/>
+  <path d="M23 31c10.4.1 18.8 3.7 25 10.8C54.2 34.7 62.6 31.1 73 31v32c-10.3.1-18.7 3.3-25 9.6-6.3-6.3-14.7-9.5-25-9.6V31Z" fill="#F7FBF8" stroke="#A6F2D1" stroke-width="3.5" stroke-linejoin="round"/>
+  <path d="M48 41.8v30.8" stroke="#004532" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="m38.4 24.8-3.1-5.1M48 22.4v-5.8M57.6 24.8l3.1-5.1" stroke="#FED65B" stroke-width="3.7" stroke-linecap="round"/>
+  <text x="108" y="59" fill="#004532" font-family="Georgia, 'Times New Roman', serif" font-size="40" font-weight="700" letter-spacing="-1">Sirâcü'l-Hüdâ</text>
+  <rect x="109" y="70" width="82" height="4" rx="2" fill="#FED65B"/>
+</svg>

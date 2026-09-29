@@ -37,6 +37,6 @@ const fallbackArticle = computed(() => articleGuides[currentSlug.value])
 
 useSeoMeta({
   title: () => contentPage.value?.title ?? fallbackArticle.value?.title ?? 'İçerik',
-  description: () => contentPage.value?.description ?? fallbackArticle.value?.description ?? 'Al-Ilm içerik sayfası.'
+  description: () => contentPage.value?.description ?? fallbackArticle.value?.description ?? "Sirâcü'l-Hüdâ içerik sayfası."
 })
 </script>

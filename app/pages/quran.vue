@@ -527,7 +527,7 @@ const togglePicker = (picker: 'surah' | 'ayah') => {
 const selectReaderView = (view: 'spread' | 'arabic' | 'meal') => {
   readerView.value = view
   if (view !== 'spread') mobilePanel.value = view
-  if (import.meta.client) localStorage.setItem('al-ilm-quran-view', view)
+  if (import.meta.client) localStorage.setItem('siraculhuda:quran-view', view)
 }
 
 const goToInputPage = () => commitPage(normalizePage(pageInput.value))
@@ -567,7 +567,7 @@ watch(() => route.query.sayfa, (value) => {
 })
 
 onMounted(() => {
-  const savedView = localStorage.getItem('al-ilm-quran-view')
+  const savedView = localStorage.getItem('siraculhuda:quran-view')
   if (savedView === 'spread' || savedView === 'arabic' || savedView === 'meal') selectReaderView(savedView)
   const firstVerse = pageVerses.value[0]
   if (firstVerse) activeVerse.value = { surahId: firstVerse.surahId, ayah: firstVerse.number }

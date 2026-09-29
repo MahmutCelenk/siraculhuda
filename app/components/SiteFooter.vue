@@ -2,7 +2,7 @@
   <footer class="border-t border-outline-variant bg-surface-container-low">
     <div class="container-shell grid gap-gutter py-16 md:grid-cols-3">
       <div class="space-y-4">
-        <p class="font-display text-2xl font-bold text-primary">Al-Ilm</p>
+        <BrandLogo />
         <p class="text-base leading-7 text-on-surface-variant">
           Geleneksel ilmi modern teknolojiyle buluşturan sakin öğrenme alanı.
         </p>
@@ -29,7 +29,7 @@
     <div class="border-t border-outline-variant/60">
       <div class="container-shell py-5">
         <p class="text-xs font-semibold text-on-surface-variant">
-          © {{ currentYear }} Al-Ilm. Tüm hakları saklıdır.
+          © {{ currentYear }} Sirâcü'l-Hüdâ. Tüm hakları saklıdır.
         </p>
       </div>
     </div>
@@ -55,7 +55,7 @@ const footerGroups: FooterGroup[] = [
       { label: 'Öğrenme Yolları', to: '/#start' },
       { label: 'Makaleler', to: '/#articles' },
       { label: 'Sureler', to: '/sureler' },
-      { label: 'Temel Bilgiler', to: '/temel-bilgiler' },
+      { label: '32 Farz', to: '/temel-bilgiler' },
       { label: 'Hadis Kütüphanesi', to: '/hadis' },
       { label: 'Namaz Rehberi', to: '/namaz' }
     ]

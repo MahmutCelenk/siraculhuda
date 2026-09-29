@@ -17,7 +17,7 @@ import { articleGuides } from '~/data/articleGuides'
 
 useSeoMeta({
   title: 'Ana Sayfa',
-  description: 'Al-Ilm İslami eğitim platformunun arama ve başlangıç sayfası.'
+  description: "Sirâcü'l-Hüdâ İslami eğitim platformunun arama ve başlangıç sayfası."
 })
 
 const search = ref('')

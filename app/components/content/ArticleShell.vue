@@ -25,7 +25,7 @@
       <img :src="image" :alt="imageAlt" class="aspect-[16/7] w-full object-cover">
       <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary/55 via-primary/10 to-transparent p-6">
         <div class="inline-flex rounded-full bg-surface-container-lowest/90 px-4 py-2 text-sm font-semibold text-primary shadow-manuscript">
-          Al-Ilm Rehberleri
+          Sirâcü'l-Hüdâ Rehberleri
         </div>
       </div>
     </div>

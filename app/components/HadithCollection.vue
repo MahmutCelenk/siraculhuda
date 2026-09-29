@@ -3,7 +3,7 @@
     <div class="library-shell">
       <header class="library-heading">
         <div>
-          <p class="library-eyebrow">AL-ILM / HADİS</p>
+          <p class="library-eyebrow">SİRÂCÜ'L-HÜDÂ / HADİS</p>
           <h1>Hadis Kütüphanesi</h1>
           <p class="library-intro">Arapça metni, Türkçe anlamı ve kaynağıyla hadisler.</p>
         </div>
