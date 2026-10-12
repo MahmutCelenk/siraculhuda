@@ -5,15 +5,18 @@
       :placeholder="homeSearchPlaceholder"
       :learning-routes="learningRoutes"
       :suggestions="searchSuggestions"
-      @submit="focusArticles"
+      :search-status="searchStatus"
+      @submit="submitSearch"
     />
     <HomeStartPaths :paths="startPaths" />
-    <HomeArticleGrid :articles="filteredArticles" />
+    <HomeArticleGrid :articles="sortedArticles" />
   </main>
 </template>
 
 <script setup lang="ts">
 import { articleGuides } from '~/data/articleGuides'
+import { siteSearchIndex } from '~/data/siteSearch'
+import { findSearchResults, normalizeSearch, pageSearchItems, type SearchItem } from '~/utils/siteSearch'
 
 useSeoMeta({
   title: 'Ana Sayfa',
@@ -61,14 +64,6 @@ type HomeArticle = {
   order: number
 }
 
-type SearchSuggestion = {
-  title: string
-  description: string
-  to: string
-  kind: string
-  keywords: string[]
-  priority: number
-}
 
 const articleList = computed<HomeArticle[]>(() => {
   const collectionArticles = (articles.value ?? []).filter((article) => article.path?.startsWith('/articles/'))
@@ -102,108 +97,23 @@ const articleList = computed<HomeArticle[]>(() => {
   })
 })
 
-const filteredArticles = computed(() => {
-  const term = search.value.trim().toLocaleLowerCase('tr-TR')
-  const sortedArticles = [...articleList.value].sort((a, b) => a.order - b.order)
+const sortedArticles = computed(() => [...articleList.value].sort((a, b) => a.order - b.order))
 
-  if (!term) {
-    return sortedArticles
-  }
+const articleSearchItems = computed<SearchItem[]>(() => articleList.value.map(article => ({
+  title: article.title,
+  description: article.description,
+  to: article.path,
+  kind: 'Makale',
+  keywords: [article.title, article.description, article.category],
+  priority: 80
+})))
 
-  return sortedArticles.filter((article) => {
-    const haystack = [
-      article.title,
-      article.description,
-      article.category
-    ].join(' ').toLocaleLowerCase('tr-TR')
-
-    return haystack.includes(term)
-  })
-})
-
-const pageSearchItems: SearchSuggestion[] = [
-  {
-    title: "Kur'an Oku",
-    description: "Mushaf hissine yakın sayfa düzeninde Arapça metin ve Türkçe meal ile oku.",
-    to: '/kuran',
-    kind: 'Sayfa',
-    keywords: ['kuran', 'kur’an', 'quran', 'mushaf', 'meal', 'arapça', 'oku', 'cüz'],
-    priority: 100
-  },
-  {
-    title: 'Sureler',
-    description: '114 sureyi Arapça, Türkçe okunuş ve Türkçe anlamıyla incele.',
-    to: '/sureler',
-    kind: 'Sayfa',
-    keywords: ['sure', 'sureler', 'fatiha', 'bakara', 'ihlas', 'felak', 'nas', 'ayet'],
-    priority: 94
-  },
-  {
-    title: 'Namaz Öğren',
-    description: 'Vakit namazları, rekât düzeni, dualar ve adım adım kılınış rehberi.',
-    to: '/namaz',
-    kind: 'Sayfa',
-    keywords: ['namaz', 'sabah', 'öğle', 'ikindi', 'akşam', 'yatsı', 'teravih', 'rekat', 'dua'],
-    priority: 92
-  },
-  {
-    title: 'Hadisler',
-    description: 'Sahih hadis seçkisini konu başlıklarına göre oku ve ara.',
-    to: '/hadis',
-    kind: 'Sayfa',
-    keywords: ['hadis', 'buhari', 'sahih', 'sünnet', 'ahlak', 'niyet'],
-    priority: 90
-  },
-  {
-    title: '32 Farz',
-    description: "İmanın şartları, İslam'ın şartları, namaz, abdest, gusül ve teyemmüm farzları.",
-    to: '/temel-bilgiler',
-    kind: 'Sayfa',
-    keywords: ['32 farz', 'otuz iki farz', 'iman', 'islam', 'abdest', 'gusül', 'teyemmüm', 'farz'],
-    priority: 88
-  }
-]
-
-const articleSearchItems = computed<SearchSuggestion[]>(() => {
-  return articleList.value.map((article, index) => ({
-    title: article.title,
-    description: article.description,
-    to: article.path,
-    kind: 'Makale',
-    keywords: [article.title, article.description, article.category],
-    priority: 70 - index
-  }))
-})
-
-const searchSuggestions = computed(() => {
-  const term = normalizeSearch(search.value)
-
-  if (term.length < 2) {
-    return []
-  }
-
-  return [...pageSearchItems, ...articleSearchItems.value]
-    .map((item) => {
-      const haystack = normalizeSearch([
-        item.title,
-        item.description,
-        item.kind,
-        ...item.keywords
-      ].join(' '))
-
-      if (!haystack.includes(term)) {
-        return null
-      }
-
-      const startsWithTitle = normalizeSearch(item.title).startsWith(term)
-      return {
-        ...item,
-        score: item.priority + (startsWithTitle ? 30 : 0)
-      }
-    })
-    .filter((item): item is SearchSuggestion & { score: number } => Boolean(item))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 6)
+const searchSuggestions = computed(() => findSearchResults(
+  [...pageSearchItems, ...siteSearchIndex, ...articleSearchItems.value], search.value
+))
+const searchStatus = computed(() => {
+  if (normalizeSearch(search.value).length < 2 || searchSuggestions.value.length) return ''
+  return 'Bu arama için içerik bulunamadı. Bir sure, hadis veya konu adı deneyebilirsin.'
 })
 
 
@@ -273,29 +183,9 @@ const learningRoutes = [
   }
 ]
 
-function normalizeSearch(value: string) {
-  return value
-    .toLocaleLowerCase('tr-TR')
-    .replaceAll('ı', 'i')
-    .replaceAll('ğ', 'g')
-    .replaceAll('ü', 'u')
-    .replaceAll('ş', 's')
-    .replaceAll('ö', 'o')
-    .replaceAll('ç', 'c')
-    .replace(/[’'`´]/g, '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-}
-
-function focusArticles() {
+async function submitSearch() {
   const firstSuggestion = searchSuggestions.value[0]
-
-  if (firstSuggestion) {
-    router.push(firstSuggestion.to)
-    return
-  }
-
-  document.querySelector('#articles')?.scrollIntoView({ behavior: 'smooth' })
+  if (firstSuggestion) await router.push(firstSuggestion.to)
 }
 </script>
 

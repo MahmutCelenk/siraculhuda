@@ -146,6 +146,7 @@
 import type { HadithItem } from '~/data/hadiths'
 
 const props = defineProps<{ items: HadithItem[] }>()
+const route = useRoute()
 const search = ref('')
 const activeTopic = ref('Tümü')
 const currentPage = ref(1)
@@ -174,6 +175,15 @@ function onReaderClose() {
 }
 
 onBeforeUnmount(onReaderClose)
+
+function openRouteHadith(value: unknown) {
+  if (typeof value !== 'string') return
+  const hadith = props.items.find(item => String(item.id) === value)
+  if (hadith) void openReader(hadith)
+}
+
+onMounted(() => openRouteHadith(route.query.hadis))
+watch(() => route.query.hadis, openRouteHadith)
 
 const topics = computed(() => [...new Set(props.items.map(item => item.topic))].sort((a, b) => a.localeCompare(b, 'tr')))
 const filteredHadiths = computed(() => {

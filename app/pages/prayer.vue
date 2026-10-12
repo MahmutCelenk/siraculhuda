@@ -540,7 +540,15 @@ const dailyPrayers = [
   }
 ]
 
-const selectedPrayerId = ref(dailyPrayers[0]?.id ?? 'sabah')
+const route = useRoute()
+function routePrayer(value: unknown) {
+  return dailyPrayers.find(prayer => prayer.id === value)?.id
+}
+const selectedPrayerId = ref(routePrayer(route.query.namaz) ?? dailyPrayers[0]?.id ?? 'sabah')
+watch(() => route.query.namaz, (value) => {
+  const id = routePrayer(value)
+  if (id) selectedPrayerId.value = id
+})
 const selectedPrayer = computed(() => dailyPrayers.find((prayer) => prayer.id === selectedPrayerId.value) ?? dailyPrayers[0])
 const prayerSearch = ref('')
 const openUnitDetails = ref<string[]>([])
