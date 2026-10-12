@@ -1,0 +1,7 @@
+.section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; }
+.section-title { margin-top: .65rem; font-family: 'Playfair Display', serif; font-size: clamp(2.15rem, 4vw, 3.25rem); font-weight: 700; line-height: 1.05; color: #004532; }
+.section-description { max-width: 42rem; margin-top: 1rem; color: #3f4944; font-size: 1rem; line-height: 1.75; }
+.section-count { flex: 0 0 auto; border: 1px solid rgb(0 69 50 / .14); border-radius: 999px; background: #fff; padding: .6rem 1rem; color: #004532; font-size: .75rem; font-weight: 800; }
+.farz-card { min-height: 15rem; border: 1px solid rgb(190 201 194 / .5); border-radius: 1.5rem; background: #fff; padding: 1.75rem; box-shadow: 0 4px 20px rgb(6 95 70 / .04); transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+.farz-card:hover { transform: translateY(-4px); border-color: rgb(139 214 182 / .85); box-shadow: 0 12px 32px rgb(6 95 70 / .08); }
+@media (max-width: 639.98px) { .section-heading { align-items: flex-start; flex-direction: column; gap: 1.25rem; } .farz-card { min-height: auto; } }

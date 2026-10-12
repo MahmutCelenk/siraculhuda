@@ -77,11 +77,4 @@ defineProps<{
 }>()
 </script>
 
-<style scoped>
-.recitation-arabic {
-  font-family: 'Amiri', 'Noto Naskh Arabic', 'Traditional Arabic', serif;
-  font-weight: 400;
-  letter-spacing: normal;
-  word-spacing: normal;
-}
-</style>
+<style scoped src="~/assets/css/components/article-steps.css"></style>

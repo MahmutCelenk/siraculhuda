@@ -103,20 +103,4 @@ const navItems = [
 ]
 </script>
 
-<style scoped>
-.desktop-navigation { display: flex; align-items: center; gap: 18px; }
-.mobile-menu-toggle, .mobile-navigation { display: none; }
-@media (max-width: 959.98px) {
-  .desktop-navigation { display: none; }
-  .mobile-menu-toggle { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 10px; border: 1px solid #dce5df; border-radius: 10px; background: #fff; color: #004532; cursor: pointer; }
-  .mobile-menu-toggle svg { width: 22px; height: 22px; }
-  .mobile-menu-toggle:hover, .mobile-menu-toggle[aria-expanded="true"] { background: #eaf3ed; border-color: #b8cebf; }
-  .mobile-menu-toggle:focus-visible, .mobile-navigation-link:focus-visible { outline: 2px solid #065f46; outline-offset: 3px; }
-  .mobile-navigation { display: block; position: absolute; top: 100%; right: 0; left: 0; max-height: calc(100dvh - 57px); overflow-y: auto; overscroll-behavior: contain; border-top: 1px solid #e4eae5; border-bottom: 1px solid #d7e2d9; background: #f9f9f8; box-shadow: 0 14px 24px #183e2814; }
-  .mobile-navigation-links { display: grid; gap: 4px; padding: 12px 16px 16px; }
-  .mobile-navigation-link { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 46px; padding: 12px 14px; border-radius: 8px; color: #3f4944; font-size: 14px; font-weight: 500; text-decoration: none; }
-  .mobile-navigation-link span { color: #6a8173; }
-  .mobile-navigation-link:hover, .mobile-navigation-link.is-active { background: #e7f0e9; color: #004532; }
-  .mobile-navigation-link.is-active { font-weight: 700; }
-}
-</style>
+<style scoped src="~/assets/css/components/site-header.css"></style>
