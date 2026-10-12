@@ -20,6 +20,7 @@
               :placeholder="placeholder"
               autocomplete="off"
               aria-controls="home-search-suggestions"
+              :aria-describedby="searchStatus ? 'home-search-status' : undefined"
               :aria-expanded="showSuggestions"
               @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
             >
@@ -47,6 +48,9 @@
             </NuxtLink>
           </div>
         </div>
+        <p v-if="searchStatus" id="home-search-status" role="status" class="mt-3 text-sm leading-6 text-on-surface-variant">
+          {{ searchStatus }}
+        </p>
       </form>
 
       <div id="start" class="mt-7 flex max-w-3xl flex-wrap items-center justify-center gap-3">
@@ -102,6 +106,7 @@ const props = defineProps<{
   placeholder: string
   learningRoutes: LearningRoute[]
   suggestions: SearchSuggestion[]
+  searchStatus?: string
 }>()
 
 const showSuggestions = computed(() => props.modelValue.trim().length > 1 && props.suggestions.length > 0)

@@ -183,16 +183,16 @@
         aria-labelledby="arabic-tab"
       >
         <header class="reader-panel-header">
-          <span>{{ currentPage }}</span>
-          <strong dir="rtl" lang="ar">{{ pageTitleArabic }}</strong>
-          <span>{{ currentPage }} / {{ totalPages }}</span>
+          <span>Kur'an-ı Kerim</span>
+          <strong>{{ pageTitleTurkish }}</strong>
+          <span>{{ focusedSelection ? selectionDescription : `${currentPage} / ${totalPages}` }}</span>
         </header>
 
         <div ref="arabicPanelBody" class="reader-panel-body arabic-page" dir="rtl" lang="ar">
           <section v-for="group in pageGroups" :key="`arabic-${group.surahId}`" class="arabic-surah-section">
-            <div v-if="group.beginsHere" class="surah-opening">
-              <strong>{{ group.arabicName }}</strong>
-              <p v-if="group.surahId !== 1 && group.surahId !== 9">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+            <div v-if="group.beginsHere || focusedSelection" class="surah-opening">
+              <strong dir="ltr" lang="tr">{{ group.surahName }} Sûresi</strong>
+              <p v-if="group.beginsHere && group.surahId !== 1 && group.surahId !== 9">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
             </div>
 
             <div class="arabic-verse-flow">
@@ -214,7 +214,7 @@
           </section>
         </div>
 
-        <footer class="reader-panel-footer">{{ currentPage }}</footer>
+        <footer class="reader-panel-footer">{{ focusedSelection ? selectionDescription : currentPage }}</footer>
       </article>
 
       <article
@@ -227,12 +227,12 @@
         <header class="reader-panel-header">
           <span>Kur'an Yolu Meali</span>
           <strong>{{ pageTitleTurkish }}</strong>
-          <span>{{ currentPage }}</span>
+          <span>{{ focusedSelection ? selectionDescription : currentPage }}</span>
         </header>
 
         <div ref="mealPanelBody" class="reader-panel-body meal-page">
           <section v-for="group in pageMealGroups" :key="`meal-${group.surahId}`" class="meal-surah-section">
-            <div v-if="group.beginsHere" class="meal-surah-heading">
+            <div v-if="group.beginsHere || focusedSelection" class="meal-surah-heading">
               <strong>{{ group.surahName }} Sûresi</strong>
               <span>{{ group.verseCount }} âyet</span>
             </div>
@@ -253,18 +253,19 @@
           </section>
         </div>
 
-        <footer class="reader-panel-footer">Meal · {{ currentPage }}</footer>
+        <footer class="reader-panel-footer">Meal · {{ focusedSelection ? selectionDescription : currentPage }}</footer>
       </article>
     </section>
 
-    <form class="reader-pagination" aria-label="Sayfa navigasyonu" @submit.prevent="goToInputPage">
-      <button type="button" :disabled="currentPage === 1" aria-label="Önceki sayfa" @click="previousPage">
+    <form ref="readerPagination" class="reader-pagination" aria-label="Sayfa navigasyonu" @submit.prevent="goToInputPage">
+      <button type="button" :disabled="!canGoBack" aria-label="Önceki sayfa" title="Önceki sayfa" @click="previousPosition">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="m15 18-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </button>
 
       <div class="reader-pagination-status">
+        <span v-if="hasSelectedAyah" class="reader-ayah-position" aria-live="polite">Âyet {{ currentAyah }} / {{ activeSurahVerseCount }}</span>
         <label for="reader-bottom-page">Sayfa</label>
         <input
           id="reader-bottom-page"
@@ -279,7 +280,7 @@
         <output>{{ totalPages }}</output>
       </div>
 
-      <button type="button" :disabled="currentPage === totalPages" aria-label="Sonraki sayfa" @click="nextPage">
+      <button type="button" :disabled="!canGoForward" aria-label="Sonraki sayfa" title="Sonraki sayfa" @click="nextPosition">
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
@@ -292,6 +293,7 @@
 import { quranPageIndex } from '~/data/quranPageIndex'
 import { quranYoluMeal } from '~/data/quranYoluMeal'
 import { surahs } from '~/data/surahs'
+import { normalizeSearch } from '~/utils/siteSearch'
 
 definePageMeta({
   layout: false,
@@ -312,6 +314,8 @@ type ActiveVerse = {
   ayah: number
 }
 
+type FocusedSelection = { surahId: number; ayah?: number }
+
 const route = useRoute()
 const router = useRouter()
 const totalPages = quranPageIndex.length
@@ -321,6 +325,7 @@ const readerFontScale = ref(1)
 const pageInput = ref('')
 const arabicPanelBody = ref<HTMLElement | null>(null)
 const mealPanelBody = ref<HTMLElement | null>(null)
+const readerPagination = ref<HTMLElement | null>(null)
 const activeVerse = ref<ActiveVerse | null>(null)
 const openPicker = ref<'surah' | 'ayah' | null>(null)
 const surahSearch = ref('')
@@ -345,8 +350,33 @@ const normalizePage = (value: unknown) => {
   return Math.min(Math.max(Math.trunc(page), 1), totalPages)
 }
 
-const currentPage = ref(normalizePage(route.query.sayfa))
+function findPageForVerse(surahId: number, ayah: number) {
+  const pageIndex = quranPageIndex.findIndex(ranges => ranges.some(
+    range => range.s === surahId && ayah >= range.a && ayah <= range.b
+  ))
+  return pageIndex >= 0 ? pageIndex + 1 : 1
+}
+
+function routeSelection(): FocusedSelection | null {
+  if (typeof route.query.sure !== 'string') return null
+  const name = normalizeSearch(route.query.sure)
+  const surah = surahs.find(item => String(item.id) === route.query.sure
+    || normalizeSearch(item.name) === name || normalizeSearch(item.slug) === name)
+  if (!surah) return null
+  const ayah = typeof route.query.ayet === 'string' ? Number(route.query.ayet) : NaN
+  return Number.isInteger(ayah) && ayah >= 1 && ayah <= surah.verseCount
+    ? { surahId: surah.id, ayah }
+    : { surahId: surah.id }
+}
+
+const focusedSelection = ref<FocusedSelection | null>(routeSelection())
+const currentPage = ref(focusedSelection.value
+  ? findPageForVerse(focusedSelection.value.surahId, focusedSelection.value.ayah ?? 1)
+  : normalizePage(route.query.sayfa))
 pageInput.value = String(currentPage.value)
+if (focusedSelection.value) {
+  activeVerse.value = { surahId: focusedSelection.value.surahId, ayah: focusedSelection.value.ayah ?? 1 }
+}
 
 const versesForPage = (page: number) => {
   const verses: QuranVerse[] = []
@@ -362,7 +392,16 @@ const versesForPage = (page: number) => {
   return verses
 }
 
-const pageVerses = computed(() => versesForPage(currentPage.value))
+const pageVerses = computed(() => {
+  const selection = focusedSelection.value
+  if (!selection) return versesForPage(currentPage.value)
+  const surah = surahs.find(item => item.id === selection.surahId)
+  return (surah?.verses ?? [])
+    .flatMap(verse => {
+      const item = allVerses.get(`${selection.surahId}:${verse.number}`)
+      return item ? [item] : []
+    })
+})
 const pageGroups = computed(() => {
   const groups: Array<{
     surahId: number
@@ -418,7 +457,6 @@ const activeMealRange = computed(() => {
   return segment ? { surahId: group?.surahId ?? 0, start: segment.start, end: segment.end } : null
 })
 
-const pageTitleArabic = computed(() => [...new Set(pageVerses.value.map(verse => verse.arabicName))].join(' / '))
 const pageTitleTurkish = computed(() => [...new Set(pageVerses.value.map(verse => verse.surahName))].join(' / '))
 const activeSurahVerseCount = computed(() => {
   const surahId = activeVerse.value?.surahId ?? pageVerses.value[0]?.surahId ?? 1
@@ -429,6 +467,12 @@ const currentSurah = computed(() => {
   return surahs.find(surah => surah.id === surahId) ?? surahs[0]
 })
 const currentAyah = computed(() => activeVerse.value?.ayah ?? pageVerses.value[0]?.number ?? 1)
+const selectionDescription = computed(() => focusedSelection.value?.ayah
+  ? `${focusedSelection.value.ayah}. âyet seçili`
+  : `${currentSurah.value?.verseCount ?? 0} âyet`)
+const hasSelectedAyah = computed(() => focusedSelection.value?.ayah !== undefined)
+const canGoBack = computed(() => currentPage.value > 1)
+const canGoForward = computed(() => currentPage.value < totalPages)
 const filteredSurahs = computed(() => {
   const query = surahSearch.value
     .trim()
@@ -459,6 +503,9 @@ const readerStyle = computed(() => ({
 }))
 
 const isArabicVerseActive = (surahId: number, ayah: number) => {
+  if (focusedSelection.value?.ayah !== undefined) {
+    return activeVerse.value?.surahId === surahId && activeVerse.value.ayah === ayah
+  }
   const range = activeMealRange.value
   if (range) return range.surahId === surahId && ayah >= range.start && ayah <= range.end
   return activeVerse.value?.surahId === surahId && activeVerse.value.ayah === ayah
@@ -470,12 +517,57 @@ const isMealSegmentActive = (surahId: number, start: number, end: number) => {
     && activeVerse.value.ayah <= end
 }
 
-const scrollWithinPanel = (element: HTMLElement | null, selector: string) => {
-  element?.querySelector<HTMLElement>(selector)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+const scrollWithinPanel = (element: HTMLElement | null, selector: string, behavior: ScrollBehavior = 'smooth') => {
+  // Hidden mobile tabs must not move the visible panel or the document.
+  if (!element || element.getClientRects().length === 0) return
+  const target = element.querySelector<HTMLElement>(selector)
+  if (!target) return
+  const targetRect = target.getBoundingClientRect()
+  const panelRect = element.getBoundingClientRect()
+  const viewportTop = window.visualViewport?.offsetTop ?? 0
+  const viewportBottom = Math.min(
+    viewportTop + (window.visualViewport?.height ?? window.innerHeight),
+    readerPagination.value?.getBoundingClientRect().top ?? Infinity
+  )
+  const scrollsDocument = window.getComputedStyle(element).overflowY === 'visible'
+  const visibleTop = scrollsDocument ? viewportTop : Math.max(viewportTop, panelRect.top + element.clientTop)
+  const visibleBottom = scrollsDocument
+    ? viewportBottom
+    : Math.min(viewportBottom, panelRect.top + element.clientTop + element.clientHeight)
+  const visibleHeight = visibleBottom - visibleTop
+  if (visibleHeight <= 0) return
+
+  // Do not move an ayah that is already fully inside the usable reading area.
+  if (targetRect.top >= visibleTop + 16 && targetRect.bottom <= visibleBottom - 16) return
+  const inset = Math.max(16, (visibleHeight - targetRect.height) / 2)
+  const offset = targetRect.top - (visibleTop + inset)
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : behavior
+  if (scrollsDocument) {
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - document.documentElement.clientHeight)
+    window.scrollTo({ top: Math.min(maxScroll, Math.max(0, window.scrollY + offset)), behavior: motion })
+  } else {
+    const maxScroll = Math.max(0, element.scrollHeight - element.clientHeight)
+    element.scrollTo({ top: Math.min(maxScroll, Math.max(0, element.scrollTop + offset)), behavior: motion })
+  }
+}
+
+const scrollToActiveVerse = async (behavior: ScrollBehavior = 'smooth') => {
+  await nextTick()
+  const verse = activeVerse.value
+  if (!verse) return
+  scrollWithinPanel(arabicPanelBody.value, `#arabic-verse-${verse.surahId}-${verse.ayah}`, behavior)
+  const segment = activeMealRange.value
+  if (segment) scrollWithinPanel(mealPanelBody.value, `#meal-segment-${verse.surahId}-${segment.start}`, behavior)
 }
 
 const activateVerse = async (surahId: number, ayah: number, source: 'arabic' | 'meal') => {
   activeVerse.value = { surahId, ayah }
+  if (focusedSelection.value) {
+    focusedSelection.value = { surahId, ayah }
+    currentPage.value = findPageForVerse(surahId, ayah)
+    pageInput.value = String(currentPage.value)
+    updateReaderLocation()
+  }
   await nextTick()
 
   if (source === 'arabic') {
@@ -486,37 +578,59 @@ const activateVerse = async (surahId: number, ayah: number, source: 'arabic' | '
   }
 }
 
-const findPageForVerse = (surahId: number, ayah: number) => {
-  const pageIndex = quranPageIndex.findIndex(ranges => ranges.some(
-    range => range.s === surahId && ayah >= range.a && ayah <= range.b
-  ))
-  return pageIndex >= 0 ? pageIndex + 1 : 1
-}
-
-const commitPage = (page: number, preferredVerse?: ActiveVerse) => {
-  const normalized = normalizePage(page)
-  currentPage.value = normalized
-  pageInput.value = String(normalized)
-  const firstVerse = versesForPage(normalized)[0]
-  activeVerse.value = preferredVerse ?? (firstVerse ? { surahId: firstVerse.surahId, ayah: firstVerse.number } : null)
-  openPicker.value = null
-  arabicPanelBody.value?.scrollTo({ top: 0 })
-  mealPanelBody.value?.scrollTo({ top: 0 })
-
-  void router.replace({
-    query: { ...route.query, sayfa: String(normalized) }
+const resetPanelScroll = () => {
+  void nextTick(() => {
+    arabicPanelBody.value?.scrollTo({ top: 0 })
+    mealPanelBody.value?.scrollTo({ top: 0 })
+    const visiblePanel = [arabicPanelBody.value, mealPanelBody.value]
+      .find(panel => panel && panel.getClientRects().length > 0)
+    if (visiblePanel && window.getComputedStyle(visiblePanel).overflowY === 'visible') {
+      window.scrollTo({ top: 0, behavior: 'auto' })
+    }
   })
 }
 
+const updateReaderLocation = () => {
+  const query: typeof route.query = { ...route.query, sayfa: String(currentPage.value) }
+  delete query.sure
+  delete query.ayet
+  if (focusedSelection.value) {
+    query.sure = String(focusedSelection.value.surahId)
+    if (focusedSelection.value.ayah) query.ayet = String(focusedSelection.value.ayah)
+  }
+  void router.replace({ query })
+}
+
+const commitPage = (page: number) => {
+  const normalized = normalizePage(page)
+  focusedSelection.value = null
+  currentPage.value = normalized
+  pageInput.value = String(normalized)
+  const firstVerse = versesForPage(normalized)[0]
+  activeVerse.value = firstVerse ? { surahId: firstVerse.surahId, ayah: firstVerse.number } : null
+  openPicker.value = null
+  resetPanelScroll()
+  updateReaderLocation()
+}
+
+const commitSelection = (surahId: number, ayah?: number) => {
+  focusedSelection.value = { surahId, ...(ayah === undefined ? {} : { ayah }) }
+  currentPage.value = findPageForVerse(surahId, ayah ?? 1)
+  pageInput.value = String(currentPage.value)
+  activeVerse.value = { surahId, ayah: ayah ?? 1 }
+  openPicker.value = null
+  if (ayah === undefined) resetPanelScroll()
+  else void scrollToActiveVerse()
+  updateReaderLocation()
+}
+
 const selectSurah = (surahId: number) => {
-  const ayah = 1
-  commitPage(findPageForVerse(surahId, ayah), { surahId, ayah })
+  commitSelection(surahId)
   surahSearch.value = ''
 }
 
 const selectAyah = (ayah: number) => {
-  const surahId = activeVerse.value?.surahId ?? 1
-  commitPage(findPageForVerse(surahId, ayah), { surahId, ayah })
+  commitSelection(currentSurah.value?.id ?? 1, ayah)
 }
 
 const togglePicker = (picker: 'surah' | 'ayah') => {
@@ -528,11 +642,16 @@ const selectReaderView = (view: 'spread' | 'arabic' | 'meal') => {
   readerView.value = view
   if (view !== 'spread') mobilePanel.value = view
   if (import.meta.client) localStorage.setItem('siraculhuda:quran-view', view)
+  if (focusedSelection.value?.ayah !== undefined) void scrollToActiveVerse('auto')
 }
 
 const goToInputPage = () => commitPage(normalizePage(pageInput.value))
-const previousPage = () => commitPage(currentPage.value - 1)
-const nextPage = () => commitPage(currentPage.value + 1)
+const navigatePosition = (direction: -1 | 1) => {
+  if (direction === -1 ? !canGoBack.value : !canGoForward.value) return
+  commitPage(currentPage.value + direction)
+}
+const previousPosition = () => navigatePosition(-1)
+const nextPosition = () => navigatePosition(1)
 
 const selectInputText = (event: FocusEvent) => {
   (event.target as HTMLInputElement).select()
@@ -552,8 +671,8 @@ const handleKeydown = (event: KeyboardEvent) => {
 
   const target = event.target as HTMLElement | null
   if (target?.matches('input, textarea, button')) return
-  if (event.key === 'ArrowLeft') previousPage()
-  if (event.key === 'ArrowRight') nextPage()
+  if (event.key === 'ArrowLeft') previousPosition()
+  if (event.key === 'ArrowRight') nextPosition()
 }
 
 const handleOutsidePicker = (event: PointerEvent) => {
@@ -561,16 +680,34 @@ const handleOutsidePicker = (event: PointerEvent) => {
   if (target instanceof Element && !target.closest('[data-reader-picker]')) openPicker.value = null
 }
 
-watch(() => route.query.sayfa, (value) => {
-  const page = normalizePage(value)
-  if (page !== currentPage.value) commitPage(page)
+watch(() => [route.query.sayfa, route.query.sure, route.query.ayet], () => {
+  const selection = routeSelection()
+  const page = selection ? findPageForVerse(selection.surahId, selection.ayah ?? 1) : normalizePage(route.query.sayfa)
+  if (page === currentPage.value
+    && selection?.surahId === focusedSelection.value?.surahId
+    && selection?.ayah === focusedSelection.value?.ayah) return
+  focusedSelection.value = selection
+  currentPage.value = page
+  pageInput.value = String(page)
+  const firstVerse = pageVerses.value[0]
+  activeVerse.value = selection
+    ? { surahId: selection.surahId, ayah: selection.ayah ?? 1 }
+    : firstVerse ? { surahId: firstVerse.surahId, ayah: firstVerse.number } : null
+  openPicker.value = null
+  if (selection?.ayah !== undefined) void scrollToActiveVerse('auto')
+  else resetPanelScroll()
 })
 
 onMounted(() => {
   const savedView = localStorage.getItem('siraculhuda:quran-view')
   if (savedView === 'spread' || savedView === 'arabic' || savedView === 'meal') selectReaderView(savedView)
   const firstVerse = pageVerses.value[0]
-  if (firstVerse) activeVerse.value = { surahId: firstVerse.surahId, ayah: firstVerse.number }
+  if (focusedSelection.value) {
+    activeVerse.value = { surahId: focusedSelection.value.surahId, ayah: focusedSelection.value.ayah ?? 1 }
+    if (focusedSelection.value.ayah !== undefined) void scrollToActiveVerse('auto')
+  } else if (firstVerse) {
+    activeVerse.value = { surahId: firstVerse.surahId, ayah: firstVerse.number }
+  }
   window.addEventListener('keydown', handleKeydown)
   document.addEventListener('pointerdown', handleOutsidePicker)
 })
